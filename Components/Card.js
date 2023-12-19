@@ -1,17 +1,43 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Image, Text} from 'react-native';
 import Service from './Service';
+import { AnimatedCharacter } from './AnimatedCharacter';
 
 export default function Card(props) {
+
+    const renderAnimatedText = (text, style) => {
+        let str = text.substring(0, 16);
+        let l = str.length;
+        let add = "";
+        for(let i=0; i<16-l; i++) {
+            add += "#";
+        }
+        str += add;
+        let amex = false;
+        let formattedInput;
+        if(str.substring(0,2) == '34' || str.substring(0,2) == '37') {
+            amex = true;
+            str = str.substring(0, 15);
+        }
+        if(amex) {
+            formattedInput = str.replace(/(\d{4})(\d{0,6})(\d{0,5})/, '$1 $2 $3');
+        }else{
+            formattedInput = str.replace(/(\d{4})(\d{0,4})(\d{0,4})(\d{0,4})/, '$1 $2 $3 $4');
+        }
+        if(formattedInput == "") formattedInput = "#### #### #### ####"
+        return formattedInput.split('').map((char, index) => (
+            <AnimatedCharacter key={`${char}-${index}`} character={char} style={style} />
+        ));
+    };
 
     return (
         <View style={styles.main}>
             <Image style={styles.card} source={require('../assets/card.jpeg')} />
             <Image style={styles.chip} source={require('../assets/chip.png')} />
             <View style={styles.serviceContainer}><Service cardNumber={props.cardNumberBrut} /></View>
-            <Text style={[styles.cardNumber, {borderColor: props.cardNumberFocused ? '#FFFFFF' : '#00000000'}]}>
-                {props.cardNumber}
-            </Text>
+            <View style={[styles.cardNumber, {borderColor: props.cardNumberFocused ? "#FFF" : "#FFFFFF00"}]}>
+                {renderAnimatedText(props.cardNumberBrut, styles.textStyle)}
+            </View>
             <View style={[styles.cardNameContainer, {borderColor: props.cardNameFocused ? '#FFFFFF' : '#00000000'}]}>
                 <Text style={styles.cardNameTitle}>
                     Card Holder
@@ -71,14 +97,18 @@ const styles = StyleSheet.create({
     cardNumber: {
         fontWeight: 'bold',
         position: 'relative',
-        top: "-135%",
-        left: "16%",
-        color: 'white',
+        top: "-82%",
+        left: "25%",
         fontSize: 15,
         borderWidth: 2,
         borderRadius: 3,
         padding: 6,
-        width: "80%"
+        width: "80%",
+        display: 'flex',
+        flexDirection: 'row'
+    },
+    textStyle: {
+        color: 'white',
     },
     card: {
         position: 'relative',

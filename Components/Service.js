@@ -5,7 +5,7 @@ export default function Service({ cardNumber }) {
   let cardImageSource = require('../assets/visa.png');
 
   const getCardImageSource = () => {
-    const cardPrefix = cardNumber.substring(0, 2);
+    const cardPrefix = cardNumber.toString().substring(0, 2);
     switch (cardPrefix) {
         case '41': // Visa commence par 41
         case '42':

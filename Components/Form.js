@@ -6,7 +6,6 @@ import DatePicker from './DatePicker';
 import BackCard from './BackCard';
 
 export default function Form(props) {
-    const [cardNumber, setCardNumber] = useState("####   ####   ####   ####");
     const [cardNumberBrut, setCardNumberBrut] = useState('');
     const [cardNumberFocused, setCardNumberFocused] = useState(false);
     const [cardName, setCardName] = useState("");
@@ -20,30 +19,11 @@ export default function Form(props) {
     const computeCardNumberForTextInput = (str) => {
         const digitsOnly = str.replace(/\D/g, '');
         setCardNumberBrut(digitsOnly);
-        let formattedStr = '';
-        setCardNumber("");
-        for (let i = 0; i < digitsOnly.length; i++) {
-            formattedStr += digitsOnly[i];
-            if ((i + 1) % 4 === 0 && i < digitsOnly.length - 1) {
-                formattedStr += ' ';
-            }
-        }
-        if(formattedStr.length > 19) {
-            formattedStr = formattedStr.substring(0, 20);
-        }
-        let cn = '';
-        for (let i = 0; i < 16; i++) {
-            cn += (digitsOnly[i] == undefined ? "#" : digitsOnly[i]);
-            if ((i + 1) % 4 === 0 && i < 15) {
-                cn += '   ';
-            }
-        }
-        setCardNumber(cn);
-        return formattedStr;
+        return digitsOnly;
     }
 
     const computeCardName = (str) => {
-        setCardName(str);
+        setCardName(str.substring(0, 20));
     }
 
     const computeCVV = (str) => {
@@ -72,7 +52,7 @@ export default function Form(props) {
             {CVVFocused ? 
             <BackCard cardNumber={cardNumberBrut} CVV={CVV}/>
             :
-            <Card cardNumberBrut={cardNumberBrut} dateFocused={dateFocused} month={month} year={year} cardNumberFocused={cardNumberFocused} cardNumber={cardNumber} cardNameFocused={cardNameFocused} cardName={cardName} />
+            <Card cardNumberBrut={cardNumberBrut} dateFocused={dateFocused} month={month} year={year} cardNumberFocused={cardNumberFocused} cardNameFocused={cardNameFocused} cardName={cardName} />
             }
             <LabelledInput width="84%" marginLeft="8%" onFocus={() => {setCardNumberFocused(true); setDateFocused(false)}} onBlur={() => {setCardNumberFocused(false)}} computeText={computeCardNumberForTextInput} text='Card Number' placeholder='XXXX-XXXX-XXXX-XXXX'/>
             <LabelledInput width="84%" marginLeft="8%" onFocus={() => {setCardNameFocused(true); setDateFocused(false)}} onBlur={() => {setCardNameFocused(false)}} computeText={computeCardName} text='Card Name' placeholder='Jacques Chirac'/>
